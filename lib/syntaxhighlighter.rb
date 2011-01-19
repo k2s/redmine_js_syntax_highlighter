@@ -4,7 +4,10 @@ module Redmine
       
       class << self     
         def highlight_by_filename(text, filename)
-			"TODO highlight_by_filename"
+			# don't think it is possible to use JavaScript
+			Redmine::SyntaxHighlighting::CodeRay.highlight_by_filename(text, filename)
+			#language = File.extname(filename)			
+			# "<pre class=\"brush: " + language[1..-1] + "\">" + text.gsub("<", "&lt;") + ""
         end
         
         def highlight_by_language(text, language)
