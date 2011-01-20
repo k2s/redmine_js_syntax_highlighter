@@ -1,10 +1,21 @@
 module Redmine
   module SyntaxHighlighting
     module JsSyntaxHighlighter
+	  SETTING_KEY_THEME = "JsSyntaxHighlighter Theme"
+	  DEFAULT_THEME = "Default"
+	  THEMES = %w[
+	    Default
+		Django
+		Eclipse
+		Emacs
+		FadeToGrey
+		Midnight
+		RDark
+	  ]
       
       class << self     
         def highlight_by_filename(text, filename)
-			# don't think it is possible to use JavaScript
+			# I don't see a way how to use JavaScript highlighter
 			Redmine::SyntaxHighlighting::CodeRay.highlight_by_filename(text, filename)
 			#language = File.extname(filename)			
 			# "<pre class=\"brush: " + language[1..-1] + "\">" + text.gsub("<", "&lt;") + ""
@@ -15,7 +26,9 @@ module Redmine
         end
         
         def theme
-          "Default" #=>make it configurable in future version
+		  # use user settings
+		  user_theme = User.current.custom_value_for(CustomField.first(:conditions => {:name => Redmine::SyntaxHighlighting::JsSyntaxHighlighter::SETTING_KEY_THEME}))
+		  user_theme || self::DEFAULT_THEME
         end
       end
       
