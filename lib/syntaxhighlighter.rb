@@ -22,11 +22,13 @@ module Redmine
         end
         
         def highlight_by_language(text, language)
-			"</code></pre><pre class=\"brush: " + language + "\">" + text.gsub("<", "&lt;") + "</pre><pre><code>"
+			# TODO how to select by brush class, so we don't need jsh
+			"<pre class=\"jsh brush: " + language + "\">" + text.gsub("<", "&lt;") + "</pre>"
+			#"</code></pre><pre class=\"brush: " + language + "\">" + text.gsub("<", "&lt;") + "</pre><pre><code>"			
         end
         
         def theme
-		  # use user settings
+		  # return user setting for theme
 		  user_theme = User.current.custom_value_for(CustomField.first(:conditions => {:name => Redmine::SyntaxHighlighting::JsSyntaxHighlighter::SETTING_KEY_THEME}))
 		  user_theme || self::DEFAULT_THEME
         end
@@ -35,15 +37,20 @@ module Redmine
       class Assets < Redmine::Hook::ViewListener
         def view_layouts_base_html_head(context)
 		  # javascript_include_tag("src/shCore.js", :plugin => "redmine_syntaxhighlighter")
-		  js = ""
-		  js << "SyntaxHighlighter.autoloader("
-		  js << "'bash shell     http://alexgorbatchev.com/pub/sh/current/scripts/shBrushBash.js',"
-		  js << "'css     http://alexgorbatchev.com/pub/sh/current/scripts/shBrushCss.js',"
-		  js << "'js jscript javascript     http://alexgorbatchev.com/pub/sh/current/scripts/shBrushJScript.js',"		  
-		  js << "'php     http://alexgorbatchev.com/pub/sh/current/scripts/shBrushPhp.js',"		  		  
-          js << "'xml xhtml xslt html xhtml http://alexgorbatchev.com/pub/sh/current/scripts/shBrushXml.js'"
-		  js << ");"
-		  js = "SyntaxHighlighter.all();"
+		  #js = ""
+		  #js << "SyntaxHighlighter.autoloader("
+		  #js << "'bash shell     http://alexgorbatchev.com/pub/sh/current/scripts/shBrushBash.js',"
+		  #js << "'css     http://alexgorbatchev.com/pub/sh/current/scripts/shBrushCss.js',"
+		  #js << "'js jscript javascript     http://alexgorbatchev.com/pub/sh/current/scripts/shBrushJScript.js',"		  
+		  #js << "'php     http://alexgorbatchev.com/pub/sh/current/scripts/shBrushPhp.js',"		  		  
+          #js << "'xml xhtml xslt html xhtml http://alexgorbatchev.com/pub/sh/current/scripts/shBrushXml.js'"
+		  #js << ");"
+		  #js = "SyntaxHighlighter.all();"
+		  
+		  js = "document.observe('dom:loaded', function() {"
+		  js << "$$('pre.jsh').each(function(e) { e.up().replace(e); });"
+		  js << "SyntaxHighlighter.highlight();"
+		  js << "});"
 
 		  o = ""
 		  o << javascript_include_tag("http://alexgorbatchev.com/pub/sh/current/scripts/shCore.js")
