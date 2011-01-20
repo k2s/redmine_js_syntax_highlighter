@@ -1,3 +1,11 @@
 = redmine_js_syntax_highlighter
 
 A Redmine plugin that replaces the default syntax highlighting engine (CodeRay) with a JavaScript based {syntax highlighter}[http://alexgorbatchev.com/SyntaxHighlighter].
+
+= Installation:
+
+Next, use Rails' handy-dandy plugin installer to grab this plugin:
+
+  script/plugin install git://github.com/k2s/redmine_js_syntax_highlighter.git
+
+Alternatively, you can just copy content of <tt>edmine_js_syntax_highlighter</tt> directory into <tt>vendor/plugins</tt>.
